@@ -2,21 +2,19 @@ require 'csv'
 
 filename = './input.csv'
 csv = CSV.read filename, headers: true
-# assume that CSV has > 2 emails
-emails = []
-csv.each { |row| emails << row['Email'] }
-gift_list = {}
-emails.each { |email| gift_list[email] = nil }
+emails = csv.map { |row| row['Email'] }
+raise 'Error: CSV must contain 2+ emails!' if emails.size < 2
+
+gift_list = Hash[emails.map { |email| [email, nil] }]
 
 gift_list.each_key do |sender|
   # skip if matched in a prior iteration
   next if gift_list[sender]
 
-  # pick a random recipient
   recipient = emails.shuffle!.first
   recipient = emails.shuffle!.first while recipient == sender
 
-  if emails.size > 3
+  if emails.size != 3
     # assign matching pair
     # sender -> recipient and recipient -> sender
     gift_list[sender] = recipient
