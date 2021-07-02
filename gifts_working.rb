@@ -14,19 +14,15 @@ gift_list.each_key do |sender|
   recipient = emails.shuffle!.first
   recipient = emails.shuffle!.first while recipient == sender
 
+  gift_list[sender] = recipient
+  emails.delete sender
+  emails.delete recipient
+
   if emails.size != 3
-    # assign matching pair
-    # sender -> recipient and recipient -> sender
-    gift_list[sender] = recipient
+    # assign sender -> recipient and recipient -> sender
     gift_list[recipient] = sender
-    emails.delete sender
-    emails.delete recipient
   else
-    # base case
     # assign A->B, B->C, C->A to avoid infinite loop
-    gift_list[sender] = recipient
-    emails.delete sender
-    emails.delete recipient
     gift_list[recipient] = emails.first
     gift_list[emails.first] = sender
   end
